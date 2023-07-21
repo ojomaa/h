@@ -33,9 +33,10 @@ def new_post(request):
             body=body
         )
         post.save()
-
         return JsonResponse({"message": "Email sent successfully."}, status=201)
-    
+
+def post_type():
+    return "hellos"
 
 
 def login_view(request):
