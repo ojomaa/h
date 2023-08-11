@@ -11,6 +11,5 @@ urlpatterns = [
 
     # API Routes
     path("new_post", views.new_post, name="new_post"),
-    path('posts/<str:post_type>', views.post_type, name='post_type')
 ]
 

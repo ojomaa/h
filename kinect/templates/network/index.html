@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <div id="all-posts">
+    <div>
         <div id="newpost-view" class="card">
             <h4>New Post</h4>
             <div class="card-textbody">
@@ -13,6 +13,14 @@
             </div>
         </div>
         <div id="posts">
+        </div>
+        <div id="all-posts">
+            {% for p in post %}
+               <div class="card">
+                <h6 class="card-subtitle mb-2 text-muted"> {{p.user}} </h6>
+                <p class="card-text"> {{p.body}} </p>
+               </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

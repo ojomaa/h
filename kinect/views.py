@@ -13,7 +13,10 @@ from .models import User, NewPost
 def index(request):
     # Authenticated users view their inbox
     if request.user.is_authenticated:
-        return render(request, "network/index.html")
+        post= NewPost.objects.all()
+        return render(request, "network/index.html", {
+            "post": post
+        })
 
     # Everyone else is prompted to sign in
     else:
@@ -34,10 +37,6 @@ def new_post(request):
         )
         post.save()
         return JsonResponse({"message": "Email sent successfully."}, status=201)
-
-def post_type():
-    return "hellos"
-
 
 def login_view(request):
     if request.method == "POST":
