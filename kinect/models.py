@@ -3,6 +3,8 @@ from django.db import models
 
 
 class User(AbstractUser):
+    following= models.ManyToManyField('self',symmetrical=False, related_name="user_following")
+    follower= models.ManyToManyField('self',symmetrical=False, related_name="user_followers")
     def __str__(self):
         return f"{self.username}"
 
@@ -11,5 +13,10 @@ class NewPost(models.Model):
     body = models.TextField(blank=True)
     Timestamp= models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.user}, {self.Timestamp}"
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user': self.user.username,
+            'body': self.body,
+            'timestamp': self.Timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+        }

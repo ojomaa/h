@@ -25,7 +25,3 @@ function newpost(event) {
         document.querySelector('#compose-body').value = '';
     });
 }
-
-function allposts() {
-    fetch('')
-}

@@ -1,0 +1,37 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block body %}
+<div id="profile">
+    <h2>Profile</h2>
+    <div class="card text-white bg-info mb-3" style="max-width: 25rem;">
+        <h5 class="card-title">{{user}}</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <h6> Following</h6>
+                <p>{{user.following.all.count}}</p>
+            </div>
+            <div class="col-md-4">
+                <h6> Followers</h6>
+                <p>{{user.follower.all.count}}</p>
+            </div>
+            <div class="col-md-4">
+                <button id="follow" type="button" class="btn btn-light">Follow</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="posts">
+    {% for p in posts %}
+       <div class="card">
+        <h6 class="card-subtitle mb-2 text-muted"> {{p.user}} </h6>
+        <p class="card-text"> {{p.body}} </p>
+       </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/profile.js' %}"></script>
+{% endblock%}

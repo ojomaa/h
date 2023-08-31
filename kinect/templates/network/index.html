@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <div>
+    <div id="all-posts">
         <div id="newpost-view" class="card">
             <h4>New Post</h4>
             <div class="card-textbody">
@@ -13,11 +13,9 @@
             </div>
         </div>
         <div id="posts">
-        </div>
-        <div id="all-posts">
             {% for p in post %}
                <div class="card">
-                <h6 class="card-subtitle mb-2 text-muted"> {{p.user}} </h6>
+                <a id="user" class="nav-link" href="{% url 'profile' p.user %}"> {{p.user}} </a>
                 <p class="card-text"> {{p.body}} </p>
                </div>
             {% endfor %}
@@ -25,5 +23,6 @@
     </div>
 {% endblock %}
 {% block script %}
+    <link rel="stylesheet" href="{% static 'network/styles.css' %}">
     <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}
