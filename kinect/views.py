@@ -34,6 +34,35 @@ def profile(request, user):
         "user": user
     })
 
+@login_required 
+@csrf_exempt 
+def follow(request, user):
+
+    if request.method == 'POST':
+        #get user
+        user_to_follow = get_object_or_404(User, username=user)
+
+        #unfollow the user profile
+        if request.user in user_to_follow.follower.all():
+            # If so, unfollow
+            user_to_follow.follower.remove(request.user)
+            request.user.following.remove(user_to_follow)
+            followed = False
+        else:
+            #follow the user profile
+            user_to_follow.follower.add(request.user)
+            request.user.following.add(user_to_follow)
+            followed=True
+
+        #save the info
+        user_to_follow.save()
+        request.user.save()
+
+        followers_count = user_to_follow.follower.count()
+
+        #return JSON response
+        return JsonResponse({'followed': followed, 'followers': followers_count})
+
 @csrf_exempt  
 @login_required 
 def new_post(request):

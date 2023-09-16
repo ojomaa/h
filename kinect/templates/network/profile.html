@@ -5,18 +5,25 @@
 <div id="profile">
     <h2>Profile</h2>
     <div class="card text-white bg-info mb-3" style="max-width: 25rem;">
-        <h5 class="card-title">{{user}}</h5>
+        <h5 id="username" class="card-title">{{user}}</h5>
         <div class="row">
             <div class="col-md-4">
                 <h6> Following</h6>
-                <p>{{user.following.all.count}}</p>
+                <p id="following-count">{{user.following.all.count}}</p>
             </div>
             <div class="col-md-4">
                 <h6> Followers</h6>
-                <p>{{user.follower.all.count}}</p>
+                <p id="follower-count">{{user.follower.all.count}}</p>
             </div>
+
             <div class="col-md-4">
-                <button id="follow" type="button" class="btn btn-light">Follow</button>
+                {% if request.user != user %}
+                    {% if request.user in user.follower.all %}
+                        <button id="follow-toggle" type="button" class="btn btn-light">Unfollow</button>
+                    {% else %}
+                        <button id="follow-toggle" type="button" class="btn btn-light">Follow</button>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
