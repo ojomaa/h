@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import json
+from django.core.paginator import Paginator
 
 from .models import User, NewPost
 
@@ -13,9 +14,15 @@ from .models import User, NewPost
 def index(request):
     # Authenticated users view their inbox
     if request.user.is_authenticated:
+
+        #Show 10 posts at a time
         post= NewPost.objects.all()
+        paginator= Paginator(post,10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         return render(request, "network/index.html", {
-            "post": post
+            "page_obj": page_obj,
         })
 
     # Everyone else is prompted to sign in
@@ -26,11 +33,15 @@ def profile(request, user):
     if request.user.is_authenticated:
         user = get_object_or_404(User, username=user)
         posts= NewPost.objects.filter(user=user)
+        paginator=Paginator(posts,10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
     else:
         HttpResponseRedirect(reverse('login'))
 
     return render(request, "network/profile.html", {
-        "posts": posts,
+        "page_obj": page_obj,
         "user": user
     })
 
@@ -62,6 +73,19 @@ def follow(request, user):
 
         #return JSON response
         return JsonResponse({'followed': followed, 'followers': followers_count})
+    
+def following(request):
+    user= request.user
+    if user.is_authenticated:
+        posts = NewPost.objects.filter(user__in=user.following.all())
+        paginator=Paginator(posts,10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        return render(request, "network/following.html", {
+            "page_obj":page_obj
+        })
+        
 
 @csrf_exempt  
 @login_required 
