@@ -14,9 +14,12 @@
         </div>
         <div id="posts">
             {% for p in page_obj %}
-               <div class="card">
-                <a id="user" class="nav-link" href="{% url 'profile' p.user %}"> {{p.user}} </a>
+               <div id="{{p.id}}" class="card">
+                <a class="nav-link" href="{% url 'profile' p.user %}"> {{p.user}} </a>
                 <p class="card-text"> {{p.body}} </p>
+                {% if request.user == p.user %}
+                    <button class="edit" type="button"> Edit Post </button>
+                {% endif %}
                </div>
             {% endfor %}
         </div>
@@ -58,4 +61,5 @@
 {% block script %}
     <link rel="stylesheet" href="{% static 'network/styles.css' %}">
     <script src="{% static 'network/index.js' %}"></script>
+    <script src="{% static 'network/edit.js' %}"></script>
 {% endblock %}

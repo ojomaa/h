@@ -85,6 +85,31 @@ def following(request):
         return render(request, "network/following.html", {
             "page_obj":page_obj
         })
+
+
+@login_required 
+@csrf_exempt
+def post(request, post_id):
+
+    try:
+        post= NewPost.objects.get(user=request.user, pk=post_id)
+    except NewPost.DoesNotExist:
+        return JsonResponse('Post Does Not Exist You Rat', status=404)
+    
+    if request.method == 'GET':
+        return JsonResponse(post.serialize())
+    elif request.method == 'PUT':
+        data = json.loads(request.body)
+        if data.get('body') is not None:
+            post.body = data['body']
+        post.save()
+        return HttpResponse(status=204)
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
+
+        
         
 
 @csrf_exempt  

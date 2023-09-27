@@ -31,9 +31,12 @@
 
 <div id="posts">
     {% for p in page_obj %}
-       <div class="card">
+       <div id="card" class="card">
         <h6 class="card-subtitle mb-2 text-muted"> {{p.user}} </h6>
         <p class="card-text"> {{p.body}} </p>
+        {% if request.user == p.user %}
+            <button id="edit" type="button" class="btn btn-light"> Edit Post </button>
+        {% endif %}
        </div>
     {% endfor %}
 </div>
@@ -74,4 +77,5 @@
 
 {% block script %}
     <script src="{% static 'network/profile.js' %}"></script>
+    <script src="{% static 'network/edit.js' %}"></script>
 {% endblock%}
