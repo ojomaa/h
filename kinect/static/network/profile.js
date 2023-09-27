@@ -24,3 +24,7 @@ function follow(request) {
         followerCount.textContent = result.followers;
     })
 }
+
+function myFunction(x) {
+    x.classList.toggle("fa-thumbs-down");
+  }

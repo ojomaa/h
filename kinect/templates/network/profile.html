@@ -31,13 +31,19 @@
 
 <div id="posts">
     {% for p in page_obj %}
-       <div id="card" class="card">
-        <h6 class="card-subtitle mb-2 text-muted"> {{p.user}} </h6>
-        <p class="card-text"> {{p.body}} </p>
-        {% if request.user == p.user %}
-            <button id="edit" type="button" class="btn btn-light"> Edit Post </button>
-        {% endif %}
-       </div>
+        <div id="{{p.id}}" class="card">
+            <a class="nav-link" href="{% url 'profile' p.user %}"> {{p.user}} </a>
+            <p class="card-text"> {{p.body}} </p>
+            <p>{{p.like.count}} Likes</p>
+            {% if request.user in p.like.all %}
+                <button class="like-toggle">Unlike</button>
+            {% else %}
+                <button class="like-toggle">Like</button>
+            {% endif %}
+            {% if request.user == p.user %}
+                <button class="edit" type="button"> Edit Post </button>
+            {% endif %}
+        </div>
     {% endfor %}
 </div>
 <nav aria-label="Page navigation">

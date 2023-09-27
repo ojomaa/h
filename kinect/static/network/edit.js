@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const edit_button = document.querySelectorAll('.edit');
-    edit_button.forEach(button => button.addEventListener('click', edit))
+    const like_button = document.querySelectorAll('.like-toggle');
+    edit_button.forEach(button => button.addEventListener('click', edit));
+    like_button.forEach(button => button.addEventListener('click', like));
+    
+
     }
 );
 
@@ -24,6 +28,7 @@ function edit(event) {
         const saveButton = card.querySelector('.save');
             saveButton.addEventListener('click', () => {
                 const updatedBody = card.querySelector('textarea').value;
+                console.log(updatedBody)
 
                 fetch(`/post/${id}`, {
                     method: 'PUT',
@@ -37,17 +42,38 @@ function edit(event) {
                 })
                 .then(update => {
                     console.log(update)
-                    card.innerHTML = `
-                    <h6 class="card-subtitle mb-2 text-muted"> ${update.user} </h6>
-                    <p class="card-text"> ${update.body} </p>
-                    {% if request.user == p.user %}
-                        <button id="edit" type="button" class="btn btn-light"> Edit Post </button>
-                    {% endif %}
-                    `
+                    if (update && update.user && update.body) {
+                        card.innerHTML = `
+                            <a class="nav-link" href="/profile/${result.user}"> ${result.user} </a>
+                            <p class="card-text">${update.body}</p>
+                            <button class="edit" type="button"> Edit Post </button>`
+                    }     
                 })
                 .catch(error => {
                     console.error('Error updating post body:', error)});
                 
             });
+    })
+}
+
+function like(event) {
+    const card = event.target.closest('.card')
+    const id= card.id
+    fetch(`/like/${id}`, {
+        method: 'POST'
+    })
+    .then(response => {
+        console.log(response)
+        return response.json()
+    })
+    .then(result => {
+        console.log(result);
+        // Update the button text based on whether the user liked or unliked
+        const likeButton = card.querySelector(`.like-toggle`);
+        if (result.liked) {
+            likeButton.textContent = 'Unlike';
+        } else {
+            likeButton.textContent = 'Like';
+        }
     })
 }

@@ -103,12 +103,27 @@ def post(request, post_id):
         if data.get('body') is not None:
             post.body = data['body']
         post.save()
-        return HttpResponse(status=204)
+        return JsonResponse({'user': str(post.user), 'body': post.body} )
     else:
         return JsonResponse({
             "error": "GET or PUT request required."
         }, status=400)
+    
+@csrf_exempt 
+def like(request, post_id):
+    post= NewPost.objects.get(pk=post_id)
 
+    if request.method == 'POST':
+        if request.user not in post.like.all():
+            post.like.add(request.user)
+            liked=True
+        else:
+            post.like.remove(request.user)
+            liked=False
+        post.save()
+        likeCount= post.like.count()
+
+        return JsonResponse({'Likes': likeCount, 'liked': liked})
         
         
 
