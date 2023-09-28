@@ -17,7 +17,7 @@
                <div id="{{p.id}}" class="card">
                 <a class="nav-link" href="{% url 'profile' p.user %}"> {{p.user}} </a>
                 <p class="card-text"> {{p.body}} </p>
-                <p>{{p.like.count}} Likes</p>
+                <p class="likes">{{p.like.count}} Likes</p>
                 {% if request.user in p.like.all %}
                     <button class="like-toggle">Unlike</button>
                 {% else %}

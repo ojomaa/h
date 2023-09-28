@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const edit_button = document.querySelectorAll('.edit');
-    const like_button = document.querySelectorAll('.like-toggle');
-    edit_button.forEach(button => button.addEventListener('click', edit));
-    like_button.forEach(button => button.addEventListener('click', like));
-    
-
+    document.getElementById('posts').addEventListener('click', (event) => {
+        const target = event.target;
+        if (target.classList.contains('like-toggle')) {
+            like(event);
+        } else if (target.classList.contains('edit')) {
+            edit(event);
+        }
+    });
     }
 );
 
@@ -46,6 +48,8 @@ function edit(event) {
                         card.innerHTML = `
                             <a class="nav-link" href="/profile/${result.user}"> ${result.user} </a>
                             <p class="card-text">${update.body}</p>
+                            <p class= "likes"> ${update.likes} Likes</p>
+                            ${update.liked ? '<button class="like-toggle">Unlike</button>' : '<button class="like-toggle">Like</button>'}
                             <button class="edit" type="button"> Edit Post </button>`
                     }     
                 })
@@ -75,5 +79,9 @@ function like(event) {
         } else {
             likeButton.textContent = 'Like';
         }
+        // Update the likes in HTML
+        const likes = card.querySelector('.likes');
+        likes.textContent = `${result.likes} Likes`
+
     })
 }

@@ -94,7 +94,7 @@ def post(request, post_id):
     try:
         post= NewPost.objects.get(user=request.user, pk=post_id)
     except NewPost.DoesNotExist:
-        return JsonResponse('Post Does Not Exist You Rat', status=404)
+        return JsonResponse('Post Does Not Exist', status=404)
     
     if request.method == 'GET':
         return JsonResponse(post.serialize())
@@ -103,7 +103,9 @@ def post(request, post_id):
         if data.get('body') is not None:
             post.body = data['body']
         post.save()
-        return JsonResponse({'user': str(post.user), 'body': post.body} )
+        likes= post.like.count()
+        user_liked = request.user in post.like.all()
+        return JsonResponse({'user': str(post.user), 'body': post.body, 'likes':likes, 'liked': user_liked} )
     else:
         return JsonResponse({
             "error": "GET or PUT request required."
@@ -123,7 +125,7 @@ def like(request, post_id):
         post.save()
         likeCount= post.like.count()
 
-        return JsonResponse({'Likes': likeCount, 'liked': liked})
+        return JsonResponse({'likes': likeCount, 'liked': liked})
         
         
 
@@ -141,7 +143,7 @@ def new_post(request):
             body=body
         )
         post.save()
-        return JsonResponse({"message": "Email sent successfully."}, status=201)
+        return JsonResponse({"message": "Post Submitted."}, status=201)
 
 def login_view(request):
     if request.method == "POST":
